@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "959825401473",
+    "project_id": "mindjar-86510",
+    "storage_bucket": "mindjar-86510.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:959825401473:android:d4177c1c8e87dc0cd59f80",
+        "android_client_info": {
+          "package_name": "com.example.mindjar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHZR1701WYF3xeCs8GmoeQX-cEV-2cRn0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
