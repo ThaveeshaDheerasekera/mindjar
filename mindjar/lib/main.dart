@@ -1,7 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mindjar/configs/custom_colors.dart';
 import 'package:mindjar/firebase_options.dart';
+import 'package:mindjar/repositories/auth_repository.dart';
+import 'package:mindjar/repositories/notes_repository.dart';
+import 'package:mindjar/screens/login_screen.dart';
+import 'package:mindjar/widget/global_widgets/bottom_nav_bar_widget.dart';
+import 'package:provider/provider.dart';
 
 Future<void> main() async {
   SystemChrome.setSystemUIOverlayStyle(
@@ -21,61 +27,31 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'MindJar',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'This app id MindJar',
-            ),
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthRepository()),
+        ChangeNotifierProvider(create: (context) => NotesRepository()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'MindJar',
+        theme: ThemeData(
+          fontFamily: 'Karla',
+          colorScheme: ColorScheme.fromSeed(seedColor: CustomColors.olive),
+          useMaterial3: true,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        home: StreamBuilder(
+          stream: AuthRepository().authStateChanges,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              Provider.of<AuthRepository>(context, listen: false)
+                  .clearMessage();
+              return const BottomNavBarWidget();
+            } else {
+              return const LoginScreen();
+            }
+          },
+        ),
       ),
     );
   }
